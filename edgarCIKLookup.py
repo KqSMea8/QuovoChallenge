@@ -35,7 +35,7 @@ def sanitizeData(data):
 
 
 def main():
-    cik = "0001462245"
+    cik = "0001166559"
     filingsPage = getCompanyFilings(cik, "13F")
     page = BeautifulSoup(filingsPage, features="lxml")
     # get all filings Ids
@@ -67,7 +67,7 @@ def main():
         data.append(rowData)
     sanData = sanitizeData(data)
 
-    with open("output0001462245.tsv", "wt") as out_file:
+    with open("output" + cik +".tsv", "wt") as out_file:
         tsv_writer = csv.writer(out_file, delimiter="\t")
         tsv_writer.writerow(cols)
         for i in range(len(sanData)):
