@@ -48,34 +48,25 @@ def main():
     data = []
     cols = []
     infoRows = informationTable.findAll("infotable")
+    #find columns
     for item in infoRows:
         for elem in item:
             if elem != "\n":
                 if elem.name not in cols:
                     cols.append(elem.name)
-                # if len(elem.contents) > 1:
-                #     for i in elem.contents:
-                #         if i.name not in cols:
-                #             cols.append(i.name)
+    #create list of rows corresponding to columns
     for item in infoRows:
         rowData = ["N/A" ] * len(cols)
         for elem in item:
             if elem != "\n":
                 rowData[cols.index(elem.name)] = elem.text.strip()
-                # if len(elem.contents) > 1:
-                #     for i in elem.contents:
-                #         if i !="\n":
-                #             rowData[cols.index(elem.name)] = i.text.strip()
         data.append(rowData)
-
     sanData = sanitizeData(data)
 
     with open("output.tsv", "wt") as out_file:
         tsv_writer = csv.writer(out_file, delimiter="\t")
         tsv_writer.writerow(cols)
-        print(cols)
         for i in range(len(sanData)):
-            print(sanData[i])
             tsv_writer.writerow(sanData[i])
         out_file.close()
 
