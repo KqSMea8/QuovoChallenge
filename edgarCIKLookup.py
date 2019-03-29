@@ -4,6 +4,8 @@ import csv
 
 
 def derermineNthRecentFiling(filingUrls, n=1):
+    if len(filingUrls) < n:
+        return "Not enough filings"
     orderedFilings = sorted([i.split("/")[-1] for i in filingUrls])[-n]
     return orderedFilings
 
@@ -33,7 +35,7 @@ def sanitizeData(data):
 
 
 def main():
-    cik = "0001166559"
+    cik = "0001462245"
     filingsPage = getCompanyFilings(cik, "13F")
     page = BeautifulSoup(filingsPage, features="lxml")
     # get all filings Ids
@@ -41,6 +43,8 @@ def main():
     filingsUrls = [i.get("href") for i in filingsElements]
     # get most recent filing, change 1 to desired filing
     desiredFiling = derermineNthRecentFiling(filingsUrls, 1)
+    if desiredFiling == "Not enough filings":
+        return (print('404 Filing not found'))
     filingContent = getSelectedFilingContent(cik, desiredFiling)
     #retrieve information table from text page
     informationTable = filingContent.find("informationtable")
@@ -63,7 +67,7 @@ def main():
         data.append(rowData)
     sanData = sanitizeData(data)
 
-    with open("output.tsv", "wt") as out_file:
+    with open("output0001462245.tsv", "wt") as out_file:
         tsv_writer = csv.writer(out_file, delimiter="\t")
         tsv_writer.writerow(cols)
         for i in range(len(sanData)):
